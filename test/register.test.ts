@@ -36,6 +36,35 @@ describe('renderMeasuresMarkdown', () => {
     const headingLines = md.split('\n').filter((l) => l.startsWith('# '))
     expect(headingLines).toEqual(['# Retrofit Measures'])
   })
+
+  it('renders feasibility.site_conditions and contractor_reality with joined sources', () => {
+    const md = renderMeasuresMarkdown([{ ...base(), feasibility: { ...base().feasibility, site_conditions: 'BAS present per PCA p.12', contractor_reality: 'active controls permits in metro', sources: ['pca', 'shovels'] } }])
+    expect(md).toContain('BAS present per PCA p.12')
+    expect(md).toContain('active controls permits in metro')
+    expect(md).toContain('pca, shovels')
+  })
+
+  it('renders future_proofing.citations joined with commas', () => {
+    const md = renderMeasuresMarkdown([{ ...base(), future_proofing: { rationale: 'reduces base load', citations: ['CO Reg 28 rule text', 'IECC 2021'] } }])
+    expect(md).toContain('CO Reg 28 rule text, IECC 2021')
+  })
+
+  it('sanitizes an injection fixture in feasibility.staging', () => {
+    const md = renderMeasuresMarkdown([{ ...base(), feasibility: { ...base().feasibility, staging: '# fake\n<script>alert(1)</script>' } }])
+    expect(md).not.toContain('<script>')
+    expect(md).not.toContain('\n# fake')
+    // one heading (document title) + no injected new heading
+    const headingLines = md.split('\n').filter((l) => l.startsWith('# '))
+    expect(headingLines).toEqual(['# Retrofit Measures'])
+  })
+
+  it('renders a measure without exit_value_delta as "n/a"', () => {
+    const noExit = { ...base() }
+    delete noExit.exit_value_delta
+    const md = renderMeasuresMarkdown([noExit])
+    expect(md).toContain('Exit value delta:')
+    expect(md).toMatch(/Exit value delta:\*\*.*n\/a/)
+  })
 })
 
 // ---- I/O half: mock @supabase/supabase-js + global fetch -------------------

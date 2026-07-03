@@ -56,12 +56,19 @@ function fmtEcon(field?: { value: number; unit: string }): string {
 }
 
 export function renderMeasuresMarkdown(measures: MeasureEvaluation[]): string {
-  const line = (m: MeasureEvaluation) =>
-    `## ${sanitizeInline(m.name)}\n\n` +
-    `- **Status:** ${sanitizeInline(m.status ?? 'proposed')} · **Family:** ${sanitizeInline(m.measure_family)} · **Candidate source:** ${sanitizeInline(m.candidate_source)}\n` +
-    `- **Cost:** ${fmtEcon(m.cost)} · **NOI delta/yr:** ${fmtEcon(m.noi_delta_annual)} · **Exit value delta:** ${fmtEcon(m.exit_value_delta)}\n` +
-    `- **Feasibility:** score ${m.feasibility.score}/5 · disruption: ${sanitizeInline(m.feasibility.disruption)}\n` +
-    `- **Future-proofing:** ${sanitizeInline(m.future_proofing.rationale)}\n`
+  const line = (m: MeasureEvaluation) => {
+    const sourcesJoined = m.feasibility.sources.map(sanitizeInline).join(', ')
+    const citationsJoined = m.future_proofing.citations.map(sanitizeInline).join(', ')
+    return (
+      `## ${sanitizeInline(m.name)}\n\n` +
+      `- **Status:** ${sanitizeInline(m.status ?? 'proposed')} · **Family:** ${sanitizeInline(m.measure_family)} · **Candidate source:** ${sanitizeInline(m.candidate_source)}\n` +
+      `- **Cost:** ${fmtEcon(m.cost)} · **NOI delta/yr:** ${fmtEcon(m.noi_delta_annual)} · **Exit value delta:** ${fmtEcon(m.exit_value_delta)}\n` +
+      `- **Feasibility:** score ${m.feasibility.score}/5 · disruption: ${sanitizeInline(m.feasibility.disruption)} · site conditions: ${sanitizeInline(m.feasibility.site_conditions)} · contractor reality: ${sanitizeInline(m.feasibility.contractor_reality)} · staging: ${sanitizeInline(m.feasibility.staging)}\n` +
+      `- **Feasibility sources:** ${sourcesJoined}\n` +
+      `- **Future-proofing:** ${sanitizeInline(m.future_proofing.rationale)}\n` +
+      `- **Citations:** ${citationsJoined}\n`
+    )
+  }
   return `# Retrofit Measures\n\n_Maintained by the Soapbox retrofit-specialist plugin._\n\n${measures.map(line).join('\n')}`
 }
 
