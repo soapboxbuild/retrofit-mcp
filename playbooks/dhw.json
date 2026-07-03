@@ -1,0 +1,27 @@
+{
+  "key": "dhw",
+  "version": "1.0.0",
+  "kind": "family",
+  "doctrine": [
+    "Central heat-pump water heaters (air-to-water, often paired with storage tanks) are the boring-proven electrification-ready DHW upgrade for multifamily central plants — spec them at boiler/water-heater end-of-life, not mid-life",
+    "Recirculation-loop controls (temperature setback, demand-based recirc pumping) are the low-cost, low-disruption first move before any equipment swap",
+    "Load-reduction first: low-flow fixtures and recirc-loop insulation reduce the DHW load the new plant has to be sized for",
+    "Measured baseline matters even for DHW: use metered gas/electric consumption tied to the water-heating end-use where sub-metered, or degree-day-normalized winter-summer delta as a proxy, before crediting modeled savings",
+    "Stage DHW plant replacement around boiler/tank end-of-life and capital events; a mid-life swap rarely clears the NOI test unless the existing plant is failing",
+    "Maintainability: central heat-pump water heaters need a maintenance contract the on-site or third-party engineer actually understands — confirm local service capacity before spec'ing an unfamiliar brand"
+  ],
+  "origination_prompts": [
+    "Does the PCA show the central water heater(s) or boiler(s) serving DHW nearing end-of-life or already flagged for replacement?",
+    "Is there a recirculation loop with no controls (constant-run pump, no setback)? Controls-first candidate.",
+    "Are fixtures original-to-construction (pre-2000) with no low-flow retrofit on record?",
+    "Does the property have electrical service headroom or a planned panel upgrade that would support a heat-pump water heater conversion?"
+  ],
+  "feasibility_checks": [
+    "Verify space and clearance for heat-pump water heater equipment (they need more footprint and ventilation air than a gas boiler of similar output)",
+    "Confirm electrical capacity for the heat-pump water heater's compressor load, especially in an all-gas building considering electrification",
+    "Check cold-climate performance derating for air-source heat-pump water heaters if the plant is not in conditioned space",
+    "Tenant disruption: recirc controls and equipment-room swaps are typically none/light; verify no unit-by-unit hot water outage is required during changeover",
+    "Check Shovels for local mechanical/plumbing contractors' experience with heat-pump water heater installs as a market-readiness signal"
+  ],
+  "data_requirements": ["DHW plant inventory (type, capacity, install year, condition)", "gas/electric billing history segmented or estimated for water heating", "recirculation loop configuration and control status", "fixture flow-rate inventory"]
+}

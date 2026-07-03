@@ -1,0 +1,22 @@
+{
+  "key": "controls-rcx",
+  "version": "1.0.0",
+  "kind": "family",
+  "doctrine": [
+    "Controls and retro-commissioning come BEFORE plant replacement: tune what exists, then size what remains",
+    "Demand measured baselines (12-mo interval or utility data) before crediting any modeled savings; modeled-only savings are provisional",
+    "Prefer measures the on-site operating staff can maintain; a BAS optimization nobody understands decays in 18 months",
+    "Typical scope: schedules, setpoints, economizer repair, sensor calibration, VFD additions on constant-volume systems, DCV where occupancy varies"
+  ],
+  "origination_prompts": [
+    "Does the audit or PCA mention economizers, dampers, or actuators in fair/poor condition? RCx candidate.",
+    "Are HVAC schedules running 24/7 in the audit's operating description for a property with predictable occupancy?",
+    "Constant-speed pumps or fans older than 15 years with variable loads => VFD candidate."
+  ],
+  "feasibility_checks": [
+    "Confirm BAS exists and is programmable (PCA systems description); pneumatic-only controls change the measure scope",
+    "Tenant disruption: RCx is low-disruption but schedule changes need property-management sign-off",
+    "Check Shovels for local controls contractors' permit activity as a market-availability signal"
+  ],
+  "data_requirements": ["12-month energy baseline (utility or audit)", "equipment inventory with install years", "operating schedule description"]
+}

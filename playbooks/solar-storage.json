@@ -1,0 +1,27 @@
+{
+  "key": "solar-storage",
+  "version": "1.0.0",
+  "kind": "family",
+  "doctrine": [
+    "Align rooftop PV installation with roof life: never put panels on a roof with under 10-15 years of remaining service life without a re-roof plan, or the removal/reinstall cost destroys the economics",
+    "Boring-proven rooftop PV beats novel storage chemistries or exotic mounting systems; battery storage should be justified by demand-charge or resiliency economics, not added by default",
+    "Under NNN leases, tenant consent and cost allocation must be resolved before origination proceeds — PV feeding tenant meters or common-area load changes the lease pass-through math",
+    "Measured baseline: use actual peak-demand and TOU billing data to size PV/storage against real demand charges, not a modeled irradiance-only estimate",
+    "Maintainability: local O&M contractor availability for the specific inverter/battery brand matters as much as the equipment spec sheet",
+    "Sequence after load-reduction measures where feasible — a smaller, cheaper PV/storage system sized to a reduced load is preferable to over-building generation against an unoptimized building"
+  ],
+  "origination_prompts": [
+    "Is the roof rated for at least 10-15 more years of service life per the PCA, or is a re-roof already planned/budgeted?",
+    "Does the property have high demand charges or TOU rate exposure per the utility bill structure? Storage-economics candidate.",
+    "Is the property NNN with tenant metering — does the lease structure allow landlord-owned PV to offset tenant load, or does it need tenant consent/amendment?",
+    "Is there available roof area and structural capacity (per PCA structural notes) unencumbered by rooftop mechanical equipment?"
+  ],
+  "feasibility_checks": [
+    "Confirm roof structural load capacity for PV racking, especially on older commercial roofs with unknown live-load margins",
+    "Verify interconnection queue timelines and utility net-metering/export rules for the market before committing to a payback model",
+    "Under NNN leases, confirm tenant consent process and how PV output will be metered/allocated before quoting savings to ownership",
+    "Check local permitting and inspection timelines via Shovels for solar contractors — some markets have multi-month backlogs that change the staging plan",
+    "Tenant disruption for PV install is typically none/light (roof-level work); storage equipment rooms may require light common-area access coordination"
+  ],
+  "data_requirements": ["roof age, remaining useful life, and structural capacity", "12-month interval/TOU utility data with demand charges", "lease structure and tenant metering configuration", "available unobstructed roof area"]
+}

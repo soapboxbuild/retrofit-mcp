@@ -1,0 +1,27 @@
+{
+  "key": "envelope",
+  "version": "1.0.0",
+  "kind": "family",
+  "doctrine": [
+    "Envelope measures reduce load and should be sequenced ahead of HVAC plant sizing decisions wherever the capital timeline allows it",
+    "Piggyback on planned capital events: roof insulation goes in at re-roof, not as a standalone tear-off; window film precedes full window replacement as the boring-proven, low-cost first move",
+    "Air sealing is the highest ROI, lowest-disruption envelope measure and should be checked before any insulation or glazing spend",
+    "Measured savings from envelope work show up as reduced HVAC run-hours and heating/cooling degree-day-normalized usage — credit modeled savings only provisionally until a post-install billing cycle confirms them",
+    "Maintainability: avoid exotic facade systems that require specialty subcontractors not available in the local market; prefer standard assemblies the property's roofing/GC vendor already services",
+    "Name tenant disruption honestly: roof and exterior air sealing are typically none/light; full window replacement is in-unit and can be vacancy-required for occupied-unit scheduling at scale"
+  ],
+  "origination_prompts": [
+    "Does the PCA flag the roof as approaching end-of-life or already scheduled for replacement? Insulation-at-re-roof candidate.",
+    "Are there visible signs of air infiltration (audit blower-door results, high heating/cooling load relative to peer buildings) suggesting an air-sealing pass?",
+    "Are windows single-pane or original-to-construction with no planned replacement capital? Window film is the low-cost interim step.",
+    "Does the audit note uninsulated or under-insulated attic/roof deck assemblies?"
+  ],
+  "feasibility_checks": [
+    "Confirm re-roof timing and scope with property management/ownership before proposing insulation-at-re-roof — this is a capital-event-dependent measure, not standalone",
+    "Check historic/facade restrictions (landmark districts, HOA rules) that could block window or cladding changes",
+    "Verify window film's compatibility with existing glazing (tempered glass, warranty voiding) before spec'ing it",
+    "Check Shovels for local roofing and glazing contractor permit activity as a market-capacity signal",
+    "Name tenant disruption class per measure: roof/air-sealing work is none/light; window replacement scheduling is in-unit and may need vacancy-required treatment for full-building rollouts"
+  ],
+  "data_requirements": ["roof age, condition, and remaining useful life from PCA", "window/glazing type and age inventory", "heating/cooling degree-day-normalized utility history", "capital plan / re-roof schedule if one exists"]
+}

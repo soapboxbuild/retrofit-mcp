@@ -1,0 +1,26 @@
+{
+  "key": "baseline-discipline",
+  "version": "1.0.0",
+  "kind": "phase",
+  "doctrine": [
+    "Measured savings (12-month utility billing or interval/sub-metered data, ideally weather-normalized) are creditable for underwriting NOI impact; modeled-only savings are provisional and should be haircut or excluded from the money test",
+    "Modeled savings are appropriate for origination and screening — deciding which measures to investigate — but not for committing capital or setting rent/NOI expectations",
+    "A pre-installation measured baseline is required to ever validate post-installation savings; skipping it means the property can never prove the retrofit worked, which undermines the next capital round",
+    "Post-installation measurement (at least one full billing cycle, preferably 12 months, weather-normalized) converts modeled savings to measured savings and should trigger a re-underwrite of the NOI/exit-value case",
+    "When measured and modeled savings diverge materially, trust the measured number and investigate the model's assumptions (occupancy, schedule, equipment performance curves) rather than the reverse",
+    "NOI and exit value are the money test: a measure that saves energy but does not show up in NOI (e.g. tenant-paid utilities under certain lease structures) needs a separate value-capture mechanism before it's fundable on savings alone"
+  ],
+  "origination_prompts": [
+    "Is there at least 12 months of utility billing or interval data available to establish a pre-retrofit baseline? If not, this must be collected before the plan proceeds to committed capital.",
+    "Does the audit's savings claim state whether it is measured (from actual bills) or modeled (from an engineering estimate)? Flag any claim that doesn't specify.",
+    "Who pays the utility bill for the measure's end-use (landlord, tenant, sub-metered)? This determines whether savings flow to NOI directly.",
+    "Is there a plan to re-measure post-installation, and on what cadence?"
+  ],
+  "feasibility_checks": [
+    "Confirm the baseline period doesn't include an anomalous year (major vacancy swing, unusual weather, equipment failure) that would distort the comparison",
+    "Weather-normalize baseline and post-install data using degree-days before comparing, especially for HVAC and envelope measures",
+    "Verify sub-metering exists if the savings claim depends on isolating one end-use from whole-building billing",
+    "Check that the lease structure (gross vs NNN vs tenant-metered) actually routes the claimed savings to ownership's NOI before counting them in the exit-value model"
+  ],
+  "data_requirements": ["12-month pre-retrofit utility billing history", "weather/degree-day data for the market", "lease structure and utility responsibility by unit/tenant", "sub-metering configuration if applicable", "post-installation measurement plan and cadence"]
+}

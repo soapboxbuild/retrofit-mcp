@@ -1,0 +1,27 @@
+{
+  "key": "electrification-staging",
+  "version": "1.0.0",
+  "kind": "family",
+  "doctrine": [
+    "Electrification is staged around equipment end-of-life, not forced ahead of schedule: replacing working gas equipment prematurely rarely clears the NOI test and wastes remaining useful life",
+    "Panel and service capacity is the first gate — check available amperage and spare breaker slots before proposing any electrified end-use (heat-pump HVAC, heat-pump water heaters, EV charging) since a service upgrade is its own capital project with its own timeline",
+    "Boring-proven equipment (packaged heat-pump RTUs, central heat-pump water heaters) beats novel all-electric systems without a local service network",
+    "Load-reduction first: envelope and controls measures shrink the electrified load, which can be the difference between fitting inside existing service capacity and requiring a utility upgrade",
+    "Compliance-driven timelines (local BPS/electrification mandates) should be checked against natural equipment end-of-life dates to find the lowest-cost compliant sequencing, not treated as a reason to accelerate replacement across the board",
+    "Measured baseline (actual gas and electric consumption by end-use where available) governs the staging plan, not a generic electrification-readiness model"
+  ],
+  "origination_prompts": [
+    "Does the PCA equipment schedule show multiple gas systems (HVAC, DHW) approaching end-of-life within the same 3-5 year window? Coordinated staging candidate.",
+    "Is the property in a jurisdiction with a BPS or electrification-readiness mandate with a compliance deadline? Check the deadline against natural equipment replacement dates.",
+    "Does the electrical panel/service show available capacity in the PCA or a recent electrical assessment, or is a service upgrade already flagged as needed?",
+    "Is there a single piece of gas equipment failing repeatedly (compressor, heat exchanger) that creates a natural, unplanned end-of-life trigger?"
+  ],
+  "feasibility_checks": [
+    "Get an electrical capacity study before committing to any electrification sequence — nameplate panel rating alone is not sufficient",
+    "Confirm utility service upgrade lead times (transformer, meter, interconnection) in the local market; these can be the long pole in the staging schedule",
+    "Avoid premature replacement: if equipment has more than 5 years of remaining useful life and no compliance deadline forces action, defer and re-evaluate at next capital event",
+    "Check Shovels for local electrical contractors' permit volume and service-upgrade project history as a market-capacity signal",
+    "Name tenant disruption per stage: panel/service upgrades are typically none/light for common infrastructure but can require light in-unit access for meter or subpanel work"
+  ],
+  "data_requirements": ["equipment inventory with install years and remaining useful life estimates", "electrical service capacity / panel schedule", "applicable local BPS/electrification compliance deadlines", "gas and electric billing history by end-use where available"]
+}

@@ -1,0 +1,24 @@
+{
+  "key": "walk-the-pca",
+  "version": "1.0.0",
+  "kind": "phase",
+  "doctrine": [
+    "Extract the full system inventory (HVAC, DHW, envelope, controls, electrical service) with install years and condition ratings before proposing anything — you cannot stage what you haven't inventoried",
+    "Pull the immediate-repairs table verbatim: these are near-term forced capital events that any retrofit measure must be sequenced around, not competed against",
+    "Pull the deferred/replacement-reserve capex schedule separately from immediate repairs — this is where load-reduction-before-replacement and re-roof/re-plant piggybacking opportunities live",
+    "Cross-reference audit findings against PCA condition ratings: an audit-recommended measure on equipment the PCA rates as fair/poor is a near-term staging candidate; the same measure on equipment rated good/excellent is a defer-to-end-of-life candidate",
+    "Treat modeled savings figures in the audit as provisional until a measured baseline (utility/interval data) is available to validate them"
+  ],
+  "origination_prompts": [
+    "Has every major system (roof, HVAC, DHW, controls/BAS, electrical service, envelope) been assigned a condition rating and remaining-useful-life estimate?",
+    "Is there an immediate-repairs table, and does it name dollar amounts and forced timelines?",
+    "Is there a 5-10 year deferred capex / reserve schedule, and which line items overlap with retrofit opportunity families (roof -> envelope, HVAC plant -> hvac, water heater -> dhw)?",
+    "Does the audit's savings estimate rely on modeled assumptions the PCA's system inventory can validate or contradict (e.g. claimed RTU efficiency vs actual nameplate/age)?"
+  ],
+  "feasibility_checks": [
+    "Confirm the PCA's data is recent enough (typically within 1-3 years) to be trusted for condition ratings; stale PCAs need a site walk to re-verify major systems",
+    "Reconcile any conflicts between the PCA's equipment list and the energy audit's equipment list before building a staging plan on either alone",
+    "Check that the immediate-repairs table's dollar figures and the deferred capex schedule are both budgeted somewhere in ownership's plan, not just noted"
+  ],
+  "data_requirements": ["full PCA report", "energy audit report if separate from PCA", "immediate-repairs table", "deferred capex / reserve schedule", "utility billing history if available at this stage"]
+}

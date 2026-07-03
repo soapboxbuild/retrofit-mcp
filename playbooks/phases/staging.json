@@ -1,0 +1,26 @@
+{
+  "key": "staging",
+  "version": "1.0.0",
+  "kind": "phase",
+  "doctrine": [
+    "Sequence load-reduction measures (envelope, controls/RCx) before plant replacement decisions wherever the capital timeline allows — replacing equipment against an unreduced load leads to oversizing",
+    "Anchor every measure to a capital event: re-roof, refinance/capital-raise, unit turn, or forced equipment end-of-life. Standalone measures with no anchoring event are the hardest to get funded and the first to slip",
+    "Never force replacement of equipment with meaningful remaining useful life unless a compliance deadline or repeated-failure signal makes deferral riskier than acting now",
+    "Coordinate tenant-disruption classes across measures in the same stage: batch in-unit and vacancy-required work together at unit turnover rather than re-entering occupied units repeatedly for separate projects",
+    "The staging plan is a sequence with dependencies, not a flat list — state explicitly what must happen before what (e.g. envelope air-sealing before HVAC right-sizing; panel capacity study before any electrification stage)",
+    "Revisit the staging plan at each capital event; a plan built once at underwriting goes stale as equipment ages and rates/incentives change"
+  ],
+  "origination_prompts": [
+    "What capital events are already on ownership's calendar in the next 1-5 years (re-roof, refinance, planned unit renovations)? Attach retrofit measures to these first.",
+    "Which pieces of equipment are within 2 years of PCA-estimated end-of-life? These anchor the near-term stages.",
+    "Are there measures that only make sense if sequenced after another (load reduction before right-sizing, panel study before electrification)? Map the dependency chain explicitly.",
+    "Where do tenant-disruption classes cluster? Can in-unit or vacancy-required measures be batched into existing unit-turn schedules?"
+  ],
+  "feasibility_checks": [
+    "Confirm the assumed capital events (re-roof, refinance) are actually budgeted and scheduled by ownership, not just plausible",
+    "Verify no stage assumes financing or incentive availability (rebates, green loans) that hasn't been confirmed for this property and timeline",
+    "Check that dependency ordering is enforceable — e.g. that the load-reduction stage will actually complete before the plant-replacement decision point in the schedule",
+    "Name each stage's tenant-disruption class explicitly (none/light/in-unit/vacancy-required) and confirm property management has agreed to the disruption schedule"
+  ],
+  "data_requirements": ["walk-the-pca output (system inventory, condition, immediate repairs, deferred capex)", "ownership's known capital event calendar", "unit-turn schedule / vacancy forecast", "applicable compliance deadlines"]
+}
