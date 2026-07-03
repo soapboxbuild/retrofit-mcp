@@ -17,7 +17,8 @@ export type MeasureEvaluation = {
   status?: 'proposed' | 'recommended' | 'defensive' | 'screened-out' | 'needs-data' | 'implemented'
 }
 
-const econFieldSchema = z.object({
+// Base econ field schema with engine/source provenance requirement
+const baseEconFieldSchema = z.object({
   value: z.number(),
   unit: z.string(),
   engine: z.string().optional(),
@@ -27,31 +28,46 @@ const econFieldSchema = z.object({
   if (!v.engine && !v.source) {
     ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'requires engine or source provenance' })
   }
+  if (v.source === '') {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'source cannot be empty string' })
+  }
 })
 
-const greenPremiumSchema = z.object({
-  value: z.number(),
-  unit: z.string(),
-  engine: z.string().optional(),
-  source: z.string().optional(),
-  provenance: z.enum(['library', 'web']).optional(),
-}).superRefine((v, ctx) => {
+// Cost must be > 0
+const costSchema = baseEconFieldSchema.superRefine((v, ctx) => {
+  if (v.value <= 0) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'cost.value must be > 0', path: ['cost'] })
+  }
+})
+
+// Cap rate must be > 0
+const capRateSchema = baseEconFieldSchema.superRefine((v, ctx) => {
+  if (v.value <= 0) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'cap_rate.value must be > 0', path: ['cap_rate'] })
+  }
+})
+
+// Owner savings annual must be >= 0
+const ownerSavingsAnnualSchema = baseEconFieldSchema.superRefine((v, ctx) => {
+  if (v.value < 0) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'owner_savings_annual.value must be >= 0', path: ['owner_savings_annual'] })
+  }
+})
+
+// Green premium: any value, but source required
+const greenPremiumSchema = baseEconFieldSchema.superRefine((v, ctx) => {
   if (!v.source) {
     ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'green_premium requires source citation (engine alone is not sufficient)' })
   }
 })
 
-const incentiveSchema = z.object({
-  value: z.number(),
-  unit: z.string(),
-  engine: z.string().optional(),
-  source: z.string().optional(),
-  provenance: z.enum(['library', 'web']).optional(),
+// Incentive: value must be >= 0, and requires program/eligibility_basis
+const incentiveSchema = baseEconFieldSchema.extend({
   program: z.string(),
   eligibility_basis: z.string(),
 }).superRefine((v, ctx) => {
-  if (!v.engine && !v.source) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'requires engine or source provenance' })
+  if (v.value < 0) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'incentives[].value must be >= 0', path: ['incentives'] })
   }
 })
 
@@ -61,11 +77,11 @@ const measureEvaluationSchema = z.object({
   measure_family: z.string(),
   name: z.string(),
   candidate_source: z.enum(['audette', 'pca', 'audit', 'originated']),
-  cost: econFieldSchema,
-  owner_savings_annual: econFieldSchema,
-  noi_delta_annual: econFieldSchema,
-  cap_rate: econFieldSchema,
-  exit_value_delta: econFieldSchema.optional(),
+  cost: costSchema,
+  owner_savings_annual: ownerSavingsAnnualSchema,
+  noi_delta_annual: baseEconFieldSchema,
+  cap_rate: capRateSchema,
+  exit_value_delta: baseEconFieldSchema.optional(),
   green_premium: greenPremiumSchema.optional(),
   incentives: z.array(incentiveSchema).optional(),
   feasibility: z.object({
@@ -81,7 +97,7 @@ const measureEvaluationSchema = z.object({
     citations: z.array(z.string()),
   }),
   status: z.enum(['proposed', 'recommended', 'defensive', 'screened-out', 'needs-data', 'implemented']).optional(),
-})
+}).strip()
 
 export function validateEvaluation(e: unknown): { ok: true; evaluation: MeasureEvaluation } | { ok: false; errors: string[] } {
   const result = measureEvaluationSchema.safeParse(e)
