@@ -15,6 +15,7 @@ export type MeasureEvaluation = {
   feasibility: { score: 1 | 2 | 3 | 4 | 5; site_conditions: string; disruption: 'none' | 'light' | 'in-unit' | 'vacancy-required'; contractor_reality: string; staging: string; sources: string[] }
   future_proofing: { rationale: string; citations: string[] }
   status?: 'proposed' | 'recommended' | 'defensive' | 'screened-out' | 'needs-data' | 'implemented'
+  notes?: string[]
 }
 
 // Base econ field schema with engine/source provenance requirement
@@ -97,6 +98,7 @@ const measureEvaluationSchema = z.object({
     citations: z.array(z.string()),
   }),
   status: z.enum(['proposed', 'recommended', 'defensive', 'screened-out', 'needs-data', 'implemented']).optional(),
+  notes: z.array(z.string()).optional(),
 }).strip()
 
 export function validateEvaluation(e: unknown): { ok: true; evaluation: MeasureEvaluation } | { ok: false; errors: string[] } {

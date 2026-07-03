@@ -152,8 +152,19 @@ function buildServer(scope: RequestScope): McpServer {
       }
       const resolved = await resolveScope(scope, asset_id)
       const registerScope = requireAssetScope(resolved, asset_id)
-      const { id } = await saveMeasure(registerScope, withExitMath)
-      const persisted = { ...withExitMath, id }
+      // Re-evaluating an existing measure id re-validates and re-saves it
+      // from scratch; if the incoming payload doesn't carry notes (they
+      // aren't part of what a caller re-submits for evaluation), preserve
+      // whatever notes were previously recorded via update_measure_state
+      // rather than silently dropping them.
+      let toSave: MeasureEvaluation = withExitMath
+      if (withExitMath.id) {
+        const existingMeasures = await getMeasures(registerScope)
+        const existing = existingMeasures.find((m) => m.id === withExitMath.id)
+        toSave = { ...withExitMath, notes: withExitMath.notes ?? existing?.notes }
+      }
+      const { id } = await saveMeasure(registerScope, toSave)
+      const persisted = { ...toSave, id }
       return textResult(persisted)
     }
   )
