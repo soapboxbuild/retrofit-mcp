@@ -8,7 +8,8 @@
     "Air sealing is the highest ROI, lowest-disruption envelope measure and should be checked before any insulation or glazing spend",
     "Measured savings from envelope work show up as reduced HVAC run-hours and heating/cooling degree-day-normalized usage — credit modeled savings only provisionally until a post-install billing cycle confirms them",
     "Maintainability: avoid exotic facade systems that require specialty subcontractors not available in the local market; prefer standard assemblies the property's roofing/GC vendor already services",
-    "Name tenant disruption honestly: roof and exterior air sealing are typically none/light; full window replacement is in-unit and can be vacancy-required for occupied-unit scheduling at scale"
+    "Name tenant disruption honestly: roof and exterior air sealing are typically none/light; full window replacement is in-unit and can be vacancy-required for occupied-unit scheduling at scale",
+    "Air sealing changes combustion air dynamics: before tightening any building with atmospheric-vented gas appliances, require combustion-safety testing (backdraft/CO spillage) and remediate or convert to sealed-combustion — a safety gate, not an economics one"
   ],
   "origination_prompts": [
     "Does the PCA flag the roof as approaching end-of-life or already scheduled for replacement? Insulation-at-re-roof candidate.",
@@ -23,5 +24,5 @@
     "Check Shovels for local roofing and glazing contractor permit activity as a market-capacity signal",
     "Name tenant disruption class per measure: roof/air-sealing work is none/light; window replacement scheduling is in-unit and may need vacancy-required treatment for full-building rollouts"
   ],
-  "data_requirements": ["roof age, condition, and remaining useful life from PCA", "window/glazing type and age inventory", "heating/cooling degree-day-normalized utility history", "capital plan / re-roof schedule if one exists"]
+  "data_requirements": ["roof age, condition, and remaining useful life from PCA", "window/glazing type and age inventory", "heating/cooling degree-day-normalized utility history", "capital plan / re-roof schedule if one exists", "Combustion appliance inventory (venting type) for any air-sealing scope"]
 }

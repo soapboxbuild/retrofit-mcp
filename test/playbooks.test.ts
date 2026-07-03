@@ -18,6 +18,26 @@ describe('playbooks', () => {
     const d = getPlaybook('controls-rcx').doctrine.join(' ')
     expect(d).toMatch(/measured/i); expect(d).toMatch(/before/i)
   })
+  it('every playbook has valid kind and non-empty origination_prompts and data_requirements', () => {
+    for (const k of listPlaybooks()) {
+      const p = getPlaybook(k)
+      expect(['family', 'phase']).toContain(p.kind)
+      expect(p.origination_prompts).toBeDefined()
+      expect(Array.isArray(p.origination_prompts)).toBe(true)
+      expect(p.origination_prompts.length).toBeGreaterThan(0)
+      expect(p.data_requirements).toBeDefined()
+      expect(Array.isArray(p.data_requirements)).toBe(true)
+      expect(p.data_requirements.length).toBeGreaterThan(0)
+    }
+  })
+  it('hvac doctrine mentions A2L and refrigerant', () => {
+    const d = getPlaybook('hvac').doctrine.join(' ')
+    expect(d).toMatch(/A2L|refrigerant/i)
+  })
+  it('envelope doctrine mentions combustion', () => {
+    const d = getPlaybook('envelope').doctrine.join(' ')
+    expect(d).toMatch(/combustion/i)
+  })
   it('unknown key throws listing valid keys', () => {
     expect(() => getPlaybook('nope')).toThrow(/hvac/)
   })

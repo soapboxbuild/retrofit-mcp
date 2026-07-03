@@ -8,7 +8,8 @@
     "Right-size at replacement using the post-load-reduction Manual J/N-style estimate, not the nameplate of the unit being removed",
     "Stage HVAC capital around equipment end-of-life and lease/capital events; don't replace working equipment to chase incremental efficiency unless the NOI math clears on its own",
     "Measured baseline (utility bills, run-hours) governs savings claims; manufacturer AHRI ratings are inputs to a model, not proof of realized savings",
-    "Name tenant disruption honestly: RTU swaps on commercial roofs are typically none/light for tenants; in-unit PTAC or fan-coil replacement is in-unit disruption and may require vacancy scheduling for full-building conversions"
+    "Name tenant disruption honestly: RTU swaps on commercial roofs are typically none/light for tenants; in-unit PTAC or fan-coil replacement is in-unit disruption and may require vacancy scheduling for full-building conversions",
+    "Price the A2L refrigerant transition (AIM Act HFC phase-down) into any RTU/chiller replacement: post-2025 equipment uses mildly flammable A2L refrigerants (R-32, R-454B) with code, training, and cost implications — legacy R-410A units face rising service costs"
   ],
   "origination_prompts": [
     "Any RTU or chiller nearing or past its ASHRAE-typical service life (RTUs ~15-20 yrs) in the PCA equipment schedule? Replacement-planning candidate.",
@@ -21,7 +22,8 @@
     "Check electrical service capacity before proposing electrified HVAC (heat-pump RTU, VRF) — this may require a panel/service upgrade measure first",
     "Confirm crane access and staging area for rooftop equipment changeouts; tight urban sites raise cost and duration",
     "Check Shovels for local mechanical contractors' HVAC permit volume as a market-capacity and pricing-reality signal",
-    "Name the tenant disruption class explicitly per unit type: none/light for central plant work, in-unit for terminal units, vacancy-required for full in-unit system conversions"
+    "Name the tenant disruption class explicitly per unit type: none/light for central plant work, in-unit for terminal units, vacancy-required for full in-unit system conversions",
+    "Cold climates: verify heat-pump capacity derating at design temperature and specify backup/supplemental heat sizing before crediting full displacement"
   ],
   "data_requirements": ["equipment inventory with install years and condition ratings", "12-month utility or interval data", "occupancy/load profile", "roof and electrical service capacity notes"]
 }

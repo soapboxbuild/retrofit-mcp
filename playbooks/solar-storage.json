@@ -21,7 +21,8 @@
     "Verify interconnection queue timelines and utility net-metering/export rules for the market before committing to a payback model",
     "Under NNN leases, confirm tenant consent process and how PV output will be metered/allocated before quoting savings to ownership",
     "Check local permitting and inspection timelines via Shovels for solar contractors — some markets have multi-month backlogs that change the staging plan",
-    "Tenant disruption for PV install is typically none/light (roof-level work); storage equipment rooms may require light common-area access coordination"
+    "Tenant disruption for PV install is typically none/light (roof-level work); storage equipment rooms may require light common-area access coordination",
+    "Roof warranty: PV penetrations can void NDL roof warranties — require roofer-of-record coordination or ballasted/non-penetrating racking"
   ],
   "data_requirements": ["roof age, remaining useful life, and structural capacity", "12-month interval/TOU utility data with demand charges", "lease structure and tenant metering configuration", "available unobstructed roof area"]
 }
