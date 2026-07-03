@@ -37,14 +37,26 @@ export function screenMeasures(evals: MeasureEvaluation[]): ScreenedMeasure[] {
 
     // 2. feasibility check
     if (e.feasibility.score < MIN_FEASIBILITY_SCORE) {
+      const reasons = [
+        `feasibility score ${e.feasibility.score} is below the minimum feasibility score of ${MIN_FEASIBILITY_SCORE}`,
+      ]
+
+      // Also evaluate value test to inform the owner of concurrent failures
+      if (!valuePasses(e)) {
+        const valueFailureReason = e.owner_savings_annual.value <= 0
+          ? 'no positive owner savings: owner_savings_annual is zero or negative, so payback is undefined (infinite)'
+          : !(e.noi_delta_annual.value > 0)
+          ? `noi_delta_annual is not positive (${e.noi_delta_annual.value})`
+          : `simple payback of ${paybackStr} years exceeds the ${MAX_SIMPLE_PAYBACK_YEARS}-year threshold`
+        reasons.push(valueFailureReason)
+      }
+
       return {
         id: e.id,
         name: e.name,
         label: 'screened-out',
         failing_test: 'feasibility',
-        reasons: [
-          `feasibility score ${e.feasibility.score} is below the minimum feasibility score of ${MIN_FEASIBILITY_SCORE}`,
-        ],
+        reasons,
       }
     }
 

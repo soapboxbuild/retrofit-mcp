@@ -118,4 +118,44 @@ describe('screenMeasures', () => {
     expect(MAX_SIMPLE_PAYBACK_YEARS).toBe(15)
     expect(MIN_FEASIBILITY_SCORE).toBe(3)
   })
+
+  it('boundary: payback exactly 15.0 yields recommended', () => {
+    // cost / savings = 450000 / 30000 = 15.0 exactly
+    const m = computeExitMath({
+      ...base(),
+      cost: econ(450000, 'USD', { source: 'boundary test' }),
+      owner_savings_annual: econ(30000, 'USD/yr', { engine: 'll_allocation@1' }),
+    } as any)
+    const [result] = screenMeasures([m])
+    expect(result.label).toBe('recommended')
+    expect(result.reasons.join(' ')).toMatch(/15\.0/)
+  })
+
+  it('boundary: feasibility score exactly 3 passes feasibility check', () => {
+    const m = computeExitMath({
+      ...base(),
+      feasibility: { ...base().feasibility, score: 3 },
+    } as any)
+    const [result] = screenMeasures([m])
+    expect(result.label).toBe('recommended')
+    expect(result.failing_test).toBeUndefined()
+  })
+
+  it('dual failure: measure failing both feasibility and value tests lists both reasons', () => {
+    // feasibility score 2 (fails), payback 66.7 (fails)
+    const m = computeExitMath({
+      ...base(),
+      name: 'Infeasible and uneconomic',
+      cost: econ(2000000, 'USD', { source: 'boundary test' }),
+      owner_savings_annual: econ(30000, 'USD/yr', { engine: 'll_allocation@1' }),
+      feasibility: { ...base().feasibility, score: 2 },
+      future_proofing: { rationale: 'none', citations: [] },
+    } as any)
+    const [result] = screenMeasures([m])
+    expect(result.label).toBe('screened-out')
+    expect(result.failing_test).toBe('feasibility')
+    // Should mention both the feasibility score AND the payback
+    expect(result.reasons.join(' ')).toMatch(/feasibility score 2/)
+    expect(result.reasons.join(' ')).toMatch(/66\.7/)
+  })
 })
