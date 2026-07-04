@@ -191,3 +191,32 @@ export async function getMeasures(
   const measures = await loadMeasures(scope)
   return status ? measures.filter((m) => m.status === status) : measures
 }
+
+async function teardownRegisterFile(scope: Scope): Promise<void> {
+  const supabase = getClient()
+  const existing = await findExistingFilesRow(scope)
+  const paths = [jsonlPath(scope)]
+  if (existing) paths.push(`${scope.assetId}/${existing.id}/measures.md`)
+  const { error: rmErr } = await supabase.storage.from(BUCKET).remove(paths)
+  if (rmErr) throw new Error(`teardownRegisterFile: storage remove failed: ${rmErr.message ?? rmErr}`)
+  if (existing) {
+    // embeddings.file_id has ON DELETE CASCADE on files(id), so deleting the
+    // files row removes the RAG chunks automatically.
+    const { error: delErr } = await supabase.from('files').delete().eq('id', existing.id)
+    if (delErr) throw new Error(`teardownRegisterFile: files row delete failed: ${delErr.message ?? delErr}`)
+  }
+}
+
+export async function deleteMeasure(scope: Scope, measureId: string): Promise<{ deleted: true; remaining: number }> {
+  const measures = await loadMeasures(scope)
+  if (!measures.some((m) => m.id === measureId)) {
+    throw new Error(`measure_id ${measureId} not found in asset ${scope.assetId}'s measure register`)
+  }
+  const next = measures.filter((m) => m.id !== measureId)
+  if (next.length > 0) {
+    await saveMeasures(scope, next)
+  } else {
+    await teardownRegisterFile(scope)
+  }
+  return { deleted: true, remaining: next.length }
+}

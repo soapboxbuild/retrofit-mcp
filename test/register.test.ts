@@ -97,6 +97,12 @@ function makeFilesTable(existingRow: { id: string } | null, calls: Record<string
         return Promise.resolve({ error: null })
       },
     }),
+    delete: () => ({
+      eq: (_c: string, id: unknown) => {
+        calls.filesDelete = [id]
+        return Promise.resolve({ error: null })
+      },
+    }),
   }
 }
 
@@ -116,6 +122,10 @@ function mockSupabaseModule(opts: {
           upload: (path: string, body: unknown, uploadOpts: unknown) => {
             const key = path.endsWith('.jsonl') ? 'uploadJsonl' : 'uploadMd'
             opts.calls[key] = [path, body, uploadOpts]
+            return Promise.resolve({ error: null })
+          },
+          remove: (paths: string[]) => {
+            opts.calls.storageRemove = [paths]
             return Promise.resolve({ error: null })
           },
         }),
@@ -268,5 +278,73 @@ describe('register I/O', () => {
     const result = await getMeasures({ portfolioId: 'p1', assetId: 'a1' }, 'recommended')
     expect(result).toHaveLength(1)
     expect(result[0].id).toBe('m2')
+  })
+})
+
+describe('deleteMeasure', () => {
+  const originalFetch = global.fetch
+  beforeEach(() => {
+    vi.resetModules(); vi.doUnmock('@supabase/supabase-js')
+    process.env.SUPABASE_URL = 'http://example.invalid'
+    process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-key'
+    process.env.SOAPBOX_API_URL = 'https://api.example.invalid'
+    process.env.MCP_SERVER_SECRET = 'shh-secret'
+  })
+  afterEach(() => { global.fetch = originalFetch; vi.restoreAllMocks() })
+
+  it('removes one measure and re-saves the rest when others remain', async () => {
+    const calls: Record<string, unknown[]> = {}
+    const m1 = { ...base(), id: 'm1', status: 'recommended' as const }
+    const m2 = { ...base(), id: 'm2', name: 'Second', status: 'proposed' as const }
+    vi.doMock('@supabase/supabase-js', () => mockSupabaseModule({
+      downloadResult: { data: { text: async () => [m1, m2].map((m) => JSON.stringify(m)).join('\n') + '\n' }, error: null },
+      existingFilesRow: { id: 'file-1' }, calls,
+    }))
+    global.fetch = vi.fn(async () => ({ ok: true, status: 200 } as Response)) as unknown as typeof fetch
+
+    const { deleteMeasure } = await import('../src/register.js')
+    const res = await deleteMeasure({ portfolioId: 'p1', assetId: 'a1' }, 'm1')
+
+    expect(res).toEqual({ deleted: true, remaining: 1 })
+    // re-saved jsonl no longer contains m1
+    const [, jsonlBody] = calls.uploadJsonl as [string, string, unknown]
+    const rows = jsonlBody.trim().split('\n').map((l) => JSON.parse(l))
+    expect(rows).toHaveLength(1)
+    expect(rows[0].id).toBe('m2')
+    // no teardown when others remain
+    expect(calls.storageRemove).toBeFalsy()
+    expect(calls.filesDelete).toBeFalsy()
+  })
+
+  it('tears down storage + files row when deleting the last measure', async () => {
+    const calls: Record<string, unknown[]> = {}
+    const only = { ...base(), id: 'm1', status: 'recommended' as const }
+    vi.doMock('@supabase/supabase-js', () => mockSupabaseModule({
+      downloadResult: { data: { text: async () => JSON.stringify(only) + '\n' }, error: null },
+      existingFilesRow: { id: 'file-1' }, calls,
+    }))
+    const { deleteMeasure } = await import('../src/register.js')
+    const res = await deleteMeasure({ portfolioId: 'p1', assetId: 'a1' }, 'm1')
+
+    expect(res).toEqual({ deleted: true, remaining: 0 })
+    // removed both storage objects
+    const [paths] = calls.storageRemove as [string[]]
+    expect(paths).toContain('a1/retrofit/measures.jsonl')
+    expect(paths).toContain('a1/file-1/measures.md')
+    // deleted the files row (embeddings cascade off the FK)
+    expect(calls.filesDelete).toEqual(['file-1'])
+    // did not re-save an empty jsonl
+    expect(calls.uploadJsonl).toBeFalsy()
+  })
+
+  it('throws when the measure id is not in the register', async () => {
+    const calls: Record<string, unknown[]> = {}
+    vi.doMock('@supabase/supabase-js', () => mockSupabaseModule({
+      downloadResult: { data: { text: async () => JSON.stringify({ ...base(), id: 'm1' }) + '\n' }, error: null },
+      existingFilesRow: { id: 'file-1' }, calls,
+    }))
+    const { deleteMeasure } = await import('../src/register.js')
+    await expect(deleteMeasure({ portfolioId: 'p1', assetId: 'a1' }, 'nope'))
+      .rejects.toThrow(/not found/)
   })
 })
