@@ -69,7 +69,7 @@ describe('renderMeasuresMarkdown', () => {
 
 // ---- I/O half: mock @supabase/supabase-js + global fetch -------------------
 
-function makeFilesTable(existingRow: { id: string } | null, calls: Record<string, unknown[]>) {
+function makeFilesTable(existingRow: { id: string } | null, calls: Record<string, unknown[]>, filesDeleteError: unknown = null) {
   return {
     select: () => ({
       eq: (col: string, val: unknown) => {
@@ -100,7 +100,7 @@ function makeFilesTable(existingRow: { id: string } | null, calls: Record<string
     delete: () => ({
       eq: (_c: string, id: unknown) => {
         calls.filesDelete = [id]
-        return Promise.resolve({ error: null })
+        return Promise.resolve({ error: filesDeleteError })
       },
     }),
   }
@@ -110,6 +110,7 @@ function mockSupabaseModule(opts: {
   downloadResult: { data: { text: () => Promise<string> } | null; error: unknown }
   existingFilesRow: { id: string } | null
   calls: Record<string, unknown[]>
+  filesDeleteError?: unknown
 }) {
   return {
     createClient: vi.fn(() => ({
@@ -131,7 +132,7 @@ function mockSupabaseModule(opts: {
         }),
       },
       from: (table: string) => {
-        if (table === 'files') return makeFilesTable(opts.existingFilesRow, opts.calls)
+        if (table === 'files') return makeFilesTable(opts.existingFilesRow, opts.calls, opts.filesDeleteError ?? null)
         throw new Error(`unexpected table ${table}`)
       },
     })),
@@ -335,6 +336,22 @@ describe('deleteMeasure', () => {
     expect(calls.filesDelete).toEqual(['file-1'])
     // did not re-save an empty jsonl
     expect(calls.uploadJsonl).toBeFalsy()
+  })
+
+  it('throws when the files row delete fails during teardown of the last measure', async () => {
+    const calls: Record<string, unknown[]> = {}
+    const only = { ...base(), id: 'm1', status: 'recommended' as const }
+    vi.doMock('@supabase/supabase-js', () => mockSupabaseModule({
+      downloadResult: { data: { text: async () => JSON.stringify(only) + '\n' }, error: null },
+      existingFilesRow: { id: 'file-1' },
+      filesDeleteError: { message: 'db unavailable' },
+      calls,
+    }))
+    const { deleteMeasure } = await import('../src/register.js')
+    await expect(deleteMeasure({ portfolioId: 'p1', assetId: 'a1' }, 'm1'))
+      .rejects.toThrow(/files row delete failed/)
+    // row-delete throws before storage.remove is attempted
+    expect(calls.storageRemove).toBeFalsy()
   })
 
   it('throws when the measure id is not in the register', async () => {

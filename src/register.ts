@@ -197,14 +197,16 @@ async function teardownRegisterFile(scope: Scope): Promise<void> {
   const existing = await findExistingFilesRow(scope)
   const paths = [jsonlPath(scope)]
   if (existing) paths.push(`${scope.assetId}/${existing.id}/measures.md`)
-  const { error: rmErr } = await supabase.storage.from(BUCKET).remove(paths)
-  if (rmErr) throw new Error(`teardownRegisterFile: storage remove failed: ${rmErr.message ?? rmErr}`)
   if (existing) {
     // embeddings.file_id has ON DELETE CASCADE on files(id), so deleting the
-    // files row removes the RAG chunks automatically.
+    // files row removes the RAG chunks automatically. Delete the row before
+    // storage.remove: if this throws, the jsonl/md still exist so a retry
+    // reloads real data instead of an empty list.
     const { error: delErr } = await supabase.from('files').delete().eq('id', existing.id)
     if (delErr) throw new Error(`teardownRegisterFile: files row delete failed: ${delErr.message ?? delErr}`)
   }
+  const { error: rmErr } = await supabase.storage.from(BUCKET).remove(paths)
+  if (rmErr) throw new Error(`teardownRegisterFile: storage remove failed: ${rmErr.message ?? rmErr}`)
 }
 
 export async function deleteMeasure(scope: Scope, measureId: string): Promise<{ deleted: true; remaining: number }> {

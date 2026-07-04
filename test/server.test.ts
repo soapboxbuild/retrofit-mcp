@@ -61,6 +61,11 @@ describe('retrofit mcp server', () => {
     expect(raw).toMatch(/portfolio/i)
   })
 
+  it('rejects delete_measure calls without the trusted portfolio header', async () => {
+    const raw = await rpc('tools/call', { name: 'delete_measure', arguments: { asset_id: 'a1', measure_id: 'm1' } }, { 'x-soapbox-portfolio-id': '' })
+    expect(raw).toMatch(/portfolio/i)
+  })
+
   it('rejects evaluate_measure with an un-provenanced cost, naming the field', async () => {
     const measure = {
       measure_family: 'hvac',
