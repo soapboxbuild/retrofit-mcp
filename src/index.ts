@@ -9,7 +9,7 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { proposeCandidates } from './candidates.js'
 import { validateEvaluation, computeExitMath, type MeasureEvaluation } from './evaluation.js'
 import { screenMeasures } from './screening.js'
-import { saveMeasure, getMeasures, type Scope as RegisterScope } from './register.js'
+import { saveMeasure, getMeasures, deleteMeasure, type Scope as RegisterScope } from './register.js'
 import { getPlaybook } from './playbooks.js'
 import { searchLibrary, addReference } from './library.js'
 
@@ -228,6 +228,21 @@ function buildServer(scope: RequestScope): McpServer {
         : { ...measure, status }
       const { id } = await saveMeasure(registerScope, updated as MeasureEvaluation)
       return textResult({ ...updated, id })
+    }
+  )
+
+  server.tool(
+    'delete_measure',
+    "Hard-delete a measure from an asset's retrofit register by id. Irreversible: removes the entry, re-renders the client measures.md (or tears the file down if it was the last measure), and cleans the RAG index. To hide a measure while keeping the record, use update_measure_state instead.",
+    {
+      asset_id: z.string().describe('Asset (Soapbox asset id) whose register to delete from'),
+      measure_id: z.string().describe('The measure id to hard-delete'),
+    },
+    async ({ asset_id, measure_id }) => {
+      const resolved = await resolveScope(scope, asset_id)
+      const registerScope = requireAssetScope(resolved, asset_id)
+      const result = await deleteMeasure(registerScope, measure_id)
+      return textResult(result)
     }
   )
 

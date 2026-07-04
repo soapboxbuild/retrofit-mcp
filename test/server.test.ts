@@ -7,6 +7,7 @@ process.env.MCP_SERVER_SECRET = SECRET
 vi.mock('../src/register.js', () => ({
   saveMeasure: vi.fn(async () => ({ id: 'm1' })),
   getMeasures: vi.fn(async () => []),
+  deleteMeasure: vi.fn(async () => ({ deleted: true, remaining: 0 })),
 }))
 
 const { createApp } = await import('../src/index.js')
@@ -27,6 +28,7 @@ const TOOL_NAMES = [
   'get_retrofit_playbook',
   'search_reference_library',
   'add_reference',
+  'delete_measure',
 ]
 
 const rpc = (method: string, params?: any, headers: Record<string, string> = {}) =>
@@ -38,7 +40,7 @@ const rpc = (method: string, params?: any, headers: Record<string, string> = {})
   }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) }).then(r => r.text())
 
 describe('retrofit mcp server', () => {
-  it('lists all eight tools', async () => {
+  it('lists all nine tools', async () => {
     const raw = await rpc('tools/list')
     for (const t of TOOL_NAMES) expect(raw).toContain(t)
   })
@@ -181,6 +183,7 @@ describe('resolveScope: tenancy boundary + notes persistence across re-evaluatio
         return { id: full.id as string }
       }),
       getMeasures: vi.fn(async () => measures),
+      deleteMeasure: vi.fn(async () => ({ deleted: true, remaining: 0 })),
     }))
 
     const mod = await import('../src/index.js')
@@ -228,5 +231,14 @@ describe('resolveScope: tenancy boundary + notes persistence across re-evaluatio
     await scopedRpc('tools/call', { name: 'evaluate_measure', arguments: { asset_id: 'a1', measure: measureFixture({ id: 'm1' }) } })
     const afterReEval = saveMeasureCalls[saveMeasureCalls.length - 1]
     expect(afterReEval.notes).toEqual(['field verified 2026-07-03'])
+  })
+
+  it('delete_measure returns a deleted result', async () => {
+    assetRow = { id: 'a1' }
+    const raw = await scopedRpc('tools/call', { name: 'delete_measure', arguments: { asset_id: 'a1', measure_id: 'm1' } })
+    // The tool result text is JSON-stringified once by textResult() and then
+    // embedded as a string field inside the outer JSON-RPC envelope, so its
+    // quotes arrive backslash-escaped on the wire (`\"deleted\":true`).
+    expect(raw).toMatch(/\\"deleted\\":true/)
   })
 })
