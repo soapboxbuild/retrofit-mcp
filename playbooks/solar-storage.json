@@ -1,6 +1,6 @@
 {
   "key": "solar-storage",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "kind": "family",
   "doctrine": [
     "Align rooftop PV installation with roof life: never put panels on a roof with under 10-15 years of remaining service life without a re-roof plan, or the removal/reinstall cost destroys the economics",
@@ -8,7 +8,8 @@
     "Under NNN leases, tenant consent and cost allocation must be resolved before origination proceeds — PV feeding tenant meters or common-area load changes the lease pass-through math",
     "Measured baseline: use actual peak-demand and TOU billing data to size PV/storage against real demand charges, not a modeled irradiance-only estimate",
     "Maintainability: local O&M contractor availability for the specific inverter/battery brand matters as much as the equipment spec sheet",
-    "Sequence after load-reduction measures where feasible — a smaller, cheaper PV/storage system sized to a reduced load is preferable to over-building generation against an unoptimized building"
+    "Sequence after load-reduction measures where feasible — a smaller, cheaper PV/storage system sized to a reduced load is preferable to over-building generation against an unoptimized building",
+    "EV charging always carries owner MAKE-READY capex (electrical service/panel, conduit, trenching) even under a third-party host agreement (Blink/ChargePoint fund hardware, not make-ready) — never model a $0-capex EV line. Size added revenue against an explicit utilization assumption; the electrical service-capacity ceiling is the binding constraint. EV is an NOI/revenue play (capitalized ancillary revenue, risk-adjusted), not a carbon measure."
   ],
   "origination_prompts": [
     "Is the roof rated for at least 10-15 more years of service life per the PCA, or is a re-roof already planned/budgeted?",
@@ -24,5 +25,10 @@
     "Tenant disruption for PV install is typically none/light (roof-level work); storage equipment rooms may require light common-area access coordination",
     "Roof warranty: PV penetrations can void NDL roof warranties — require roofer-of-record coordination or ballasted/non-penetrating racking"
   ],
-  "data_requirements": ["roof age, remaining useful life, and structural capacity", "12-month interval/TOU utility data with demand charges", "lease structure and tenant metering configuration", "available unobstructed roof area"]
+  "data_requirements": [
+    "roof age, remaining useful life, and structural capacity",
+    "12-month interval/TOU utility data with demand charges",
+    "lease structure and tenant metering configuration",
+    "available unobstructed roof area"
+  ]
 }

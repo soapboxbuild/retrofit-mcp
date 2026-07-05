@@ -1,12 +1,15 @@
 {
   "key": "controls-rcx",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "kind": "family",
   "doctrine": [
     "Controls and retro-commissioning come BEFORE plant replacement: tune what exists, then size what remains",
     "Demand measured baselines (12-mo interval or utility data) before crediting any modeled savings; modeled-only savings are provisional",
     "Prefer measures the on-site operating staff can maintain; a BAS optimization nobody understands decays in 18 months",
-    "Typical scope: schedules, setpoints, economizer repair, sensor calibration, VFD additions on constant-volume systems, DCV where occupancy varies"
+    "Typical scope: schedules, setpoints, economizer repair, sensor calibration, VFD additions on constant-volume systems, DCV where occupancy varies",
+    "Subscription-model RCx / monitoring-based commissioning (e.g. Parity): $0 owner capex but a recurring fee. Judge it on the ANNUAL NET — gross owner savings + risk-adjusted grid/PJM demand-response revenue − the fee — NOT on capitalized-fee-vs-utility-savings-alone (capitalizing a cancellable subscription at the exit cap makes the fee 'exceed' savings, an artifact). Its value is DR monetization + $0 capex + savings persistence (continuous commissioning stops loop drift), not first-order utility savings.",
+    "When a subscription is net-marginal without DR, present a ONE-TIME retro-commissioning alternative (a capex project, no perpetual fee) alongside it so the owner sees the structuring choice.",
+    "WSHP-loop towers built in the last ~5 years are prime RCx candidates (mis-tuned condenser loop / boiler staging / MAU schedules); ~1–2 yr payback typical, 100% owner-captured where the loop is gas-heated."
   ],
   "origination_prompts": [
     "Does the audit or PCA mention economizers, dampers, or actuators in fair/poor condition? RCx candidate.",
@@ -18,5 +21,9 @@
     "Tenant disruption: RCx is low-disruption but schedule changes need property-management sign-off",
     "Check Shovels for local controls contractors' permit activity as a market-availability signal"
   ],
-  "data_requirements": ["12-month energy baseline (utility or audit)", "equipment inventory with install years", "operating schedule description"]
+  "data_requirements": [
+    "12-month energy baseline (utility or audit)",
+    "equipment inventory with install years",
+    "operating schedule description"
+  ]
 }
