@@ -1,0 +1,17 @@
+{
+  "name": "retrofit",
+  "version": "0.1.0",
+  "description": "Provenance-gated retrofit measure evaluation, playbooks, and register.",
+  "author": {
+    "name": "Soapbox",
+    "url": "https://soapbox.build"
+  },
+  "homepage": "https://github.com/soapboxbuild/retrofit-mcp",
+  "license": "Apache-2.0",
+  "mcpServers": {
+    "retrofit": {
+      "type": "http",
+      "url": "https://retrofit-mcp-production.up.railway.app/mcp"
+    }
+  }
+}
