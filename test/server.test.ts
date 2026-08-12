@@ -43,6 +43,15 @@ describe('retrofit mcp server', () => {
     for (const t of TOOL_NAMES) expect(raw).toContain(t)
   })
 
+  it('never re-exposes the retired reference-library tools', async () => {
+    // search_reference_library/add_reference were removed (superseded by
+    // knowledge-mcp's hardened copies of the same Hindsight bank). This
+    // guards against either being re-registered by accident.
+    const raw = await rpc('tools/list')
+    expect(raw).not.toContain('search_reference_library')
+    expect(raw).not.toContain('add_reference')
+  })
+
   it('serves a playbook doctrine for hvac', async () => {
     const raw = await rpc('tools/call', { name: 'get_retrofit_playbook', arguments: { key: 'hvac' } })
     expect(raw).toMatch(/doctrine/)

@@ -27,11 +27,11 @@ place but unregistered (rollback safety net); it is no longer reachable from
 > | Moving to `measure-mcp` (stateless compute, `soapbox-tools`) | Moving to app CRUD (state) |
 > |---|---|
 > | `get_retrofit_playbook` + the six playbooks (hvac, envelope, dhw, controls-rcx, electrification-staging, baseline-discipline) | `get_measure_state`, `update_measure_state`, `delete_measure` → a `measure_instance` table |
-> | `propose_candidates` (`candidates.ts`) | `add_reference` → admin write to a shared library |
-> | `evaluate_measure`'s validation + exit math (`evaluation.ts`) | `search_reference_library` → the hindsight bank is a datastore |
+> | `propose_candidates` (`candidates.ts`) | ~~`add_reference` → admin write to a shared library~~ **already removed as of 2026-08-12, not pending** — superseded by `knowledge-mcp`'s copy; nothing to port |
+> | `evaluate_measure`'s validation + exit math (`evaluation.ts`) | ~~`search_reference_library` → the hindsight bank is a datastore~~ **already removed as of 2026-08-12, not pending** — superseded by `knowledge-mcp`'s copy; nothing to port |
 > | `screen_measures` and the three tests (`screening.ts`) | the persistence half of `evaluate_measure` |
 >
-> Note for whoever does the port: the playbooks are doctrine and feasibility
+> Note for whoever does the port: `add_reference`/`search_reference_library` (right-hand column, above) are already gone as of 2026-08-12 — see the removal note at the top of this file — so there's nothing left to port for them. Also, the playbooks are doctrine and feasibility
 > checks, not savings calculators. There is no deemed-savings arithmetic anywhere
 > in this repo, so the savings-method tier (TRM-cited deemed savings for lighting
 > and VFDs, bin method for heat pumps and fuel switching) is new code regardless.
@@ -55,8 +55,8 @@ Soapbox Retrofit Specialist — governance MCP worker (playbooks, provenance-enf
 |---|---|
 | MCP_SERVER_SECRET | Bearer auth for /mcp — MUST equal soapbox-api's value (proxy forwards it; /internal/index-file checks it) |
 | SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY | register storage + files rows, asset-scope validation |
-| HINDSIGHT_API_URL | hindsight REST base (https://agent-memory.soapbox.build — NO /mcp suffix) |
-| HINDSIGHT_API_KEY | hindsight tenant bearer (bank: retrofit-library) |
+| HINDSIGHT_API_URL | no longer read by the running server as of 2026-08-12 — was only reachable via `search_reference_library`/`add_reference` in `src/library.ts`, which is now unregistered (see note at top of this file) |
+| HINDSIGHT_API_KEY | no longer read by the running server as of 2026-08-12 — same reason as HINDSIGHT_API_URL above |
 | SOAPBOX_API_URL | POST /internal/index-file after register md writes |
 | RETROFIT_LIBRARY_ADMIN_KEY | no longer read by the running server as of 2026-08-12 — gated `add_reference` in `src/library.ts`, which is now unregistered (see note at top of this file) |
 | PORT | default 8080 |
