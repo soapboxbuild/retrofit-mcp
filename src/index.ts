@@ -11,7 +11,6 @@ import { validateEvaluation, computeExitMath, type MeasureEvaluation } from './e
 import { screenMeasures } from './screening.js'
 import { saveMeasure, getMeasures, deleteMeasure, type Scope as RegisterScope } from './register.js'
 import { getPlaybook } from './playbooks.js'
-import { searchLibrary, addReference } from './library.js'
 
 // Lazy/memoized client, mirroring src/registry.ts: constructing eagerly at
 // import time would crash any environment (e.g. tests) where SUPABASE_URL /
@@ -254,35 +253,6 @@ function buildServer(scope: RequestScope): McpServer {
     },
     async ({ key }) => {
       const result = getPlaybook(key)
-      return textResult(result)
-    }
-  )
-
-  server.tool(
-    'search_reference_library',
-    "Search Soapbox's curated building-science reference library (ASHRAE/DOE/PNNL/RMI-class sources). Citations carry provenance:'library'.",
-    {
-      query: z.string().describe('Search query'),
-    },
-    async ({ query }) => {
-      const result = await searchLibrary(query)
-      return textResult(result)
-    }
-  )
-
-  server.tool(
-    'add_reference',
-    'Admin-only: add a reference document to the shared library.',
-    {
-      admin_key: z.string().describe('Shared library admin key'),
-      title: z.string(),
-      source_org: z.string(),
-      year: z.number().optional(),
-      content: z.string(),
-      topics: z.array(z.string()),
-    },
-    async ({ admin_key, title, source_org, year, content, topics }) => {
-      const result = await addReference({ admin_key, title, source_org, year, content, topics })
       return textResult(result)
     }
   )

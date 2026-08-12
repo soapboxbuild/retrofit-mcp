@@ -1,3 +1,9 @@
+**`search_reference_library`/`add_reference` were removed as of 2026-08-12** — use
+`knowledge-mcp`'s copies instead. This server's own copies were an unhardened
+duplicate of the same underlying Hindsight bank. `src/library.ts` is left in
+place but unregistered (rollback safety net); it is no longer reachable from
+`src/index.ts`.
+
 > # FROZEN — do not extend
 >
 > **Status: still the only implementation. Do not build new dependencies on it.**
@@ -52,7 +58,7 @@ Soapbox Retrofit Specialist — governance MCP worker (playbooks, provenance-enf
 | HINDSIGHT_API_URL | hindsight REST base (https://agent-memory.soapbox.build — NO /mcp suffix) |
 | HINDSIGHT_API_KEY | hindsight tenant bearer (bank: retrofit-library) |
 | SOAPBOX_API_URL | POST /internal/index-file after register md writes |
-| RETROFIT_LIBRARY_ADMIN_KEY | gates add_reference (>=32 chars; vault: "Retrofit Library Admin Key") |
+| RETROFIT_LIBRARY_ADMIN_KEY | no longer read by the running server as of 2026-08-12 — gated `add_reference` in `src/library.ts`, which is now unregistered (see note at top of this file) |
 | PORT | default 8080 |
 
 Build `npm run build` → `node dist/src/index.js`. Tests `npx vitest run --pool=forks --poolOptions.forks.singleFork=true`.

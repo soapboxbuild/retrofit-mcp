@@ -26,8 +26,6 @@ const TOOL_NAMES = [
   'get_measure_state',
   'update_measure_state',
   'get_retrofit_playbook',
-  'search_reference_library',
-  'add_reference',
   'delete_measure',
 ]
 
@@ -40,7 +38,7 @@ const rpc = (method: string, params?: any, headers: Record<string, string> = {})
   }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) }).then(r => r.text())
 
 describe('retrofit mcp server', () => {
-  it('lists all nine tools', async () => {
+  it('lists all seven tools', async () => {
     const raw = await rpc('tools/list')
     for (const t of TOOL_NAMES) expect(raw).toContain(t)
   })
